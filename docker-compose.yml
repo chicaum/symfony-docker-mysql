@@ -11,7 +11,9 @@ services:
     networks:
       - app-network
   php:
-    image: php:fpm
+    build:
+      dockerfile: Dockerfile
+      context: .docker/php-fpm
     volumes:
       - .:/var/www/project
     networks:
@@ -20,3 +22,7 @@ services:
 networks:
   app-network:
     driver: bridge
+
+#TODO
+#1 install composer and run it
+#2 install mysql extension
