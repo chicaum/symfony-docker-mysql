@@ -2,6 +2,7 @@ version: '2'
 
 services:
   web:
+    container_name: sdn
     image: nginx:latest
     ports:
       - "8181:80"
@@ -11,18 +12,35 @@ services:
     networks:
       - app-network
   php:
+    container_name: sdp
     build:
-      dockerfile: Dockerfile
-      context: .docker/php-fpm
+      context: ./
+      dockerfile: .docker/php-fpm/Dockerfile
     volumes:
       - .:/var/www/project
+      - ./composer.json:/var/www/project/composer.json
+    networks:
+      - app-network
+  composer:
+    image: composer:1.8
+    command: install --working-dir=/var/www/project --no-interaction
+    volumes:
+      - .:/var/www/project
+  db:
+    container_name: sdm
+    image: mysql:5.7
+    volumes:
+      - .docker/data/db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: project_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3381:3306"
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
-
-#TODO
-#1 install composer and run it
-#2 install mysql extension
