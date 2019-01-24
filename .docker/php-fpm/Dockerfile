@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install -j$(nproc) intl
 RUN apt install -y mysql-client
-RUN docker-php-ext-install pdo pdo_mysql
+RUN docker-php-ext-install mbstring pdo pdo_mysql
 
 RUN pecl install xdebug \
 && docker-php-ext-enable xdebug \
